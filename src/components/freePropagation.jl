@@ -3,6 +3,7 @@
 using FFTW
 using ProgressMeter
 using SharedArrays
+using Distributed
 
 """
     Create the PropTf struct.

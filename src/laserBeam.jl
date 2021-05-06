@@ -2,7 +2,7 @@
 using ZernikePolynomials
 
 # The Laser beam struct, it saves important information about the laser beam
-mutable struct LaserBeam
+mutable struct LaserBeam <: Wave
     I::Matrix{<:Real}   # Laser intensity distribution (assume uniform in z)
     x::Vector{<:Real}   # the x coordinates
     y::Vector{<:Real}   # the y coordinates
@@ -65,6 +65,7 @@ function _zernikeAmplitude(x::Vector{<:Real}, d::Real)::Matrix{<:Real}
 
     # calculate the dx value (dy MUST be the same... because the zernike
     # package only supplies with symmetric outputs, and i am lazy)
+    # also x != y
     dx = abs(x[1] - x[2])
 
     # calculate the amount of pixels that are the zernike phase diameter
@@ -83,7 +84,7 @@ function _zernikeAmplitude(x::Vector{<:Real}, d::Real)::Matrix{<:Real}
     # fill the intensity array with either 0 or the zernike amplitude
     for j = 1:size(I, 2)
         for i = 1:size(I, 1)
-            if r^2 >= x[i]^2+y[j]^2
+            if r^2 >= x[i]^2+x[j]^2
                 I[i, j] = ϕ[i-ishift, j-jshift]
             else
                 I[i, j] = 0

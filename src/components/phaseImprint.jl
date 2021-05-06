@@ -47,7 +47,7 @@ function calculate!(wave::Wave, imprint::PhaseImprint)
     for k = 1:size(z, 1)
 
         # the value has to be calculated only once
-        val = exp(-z[k]^2 / (c*Δt)^2)
+        val = exp(-z[k]^2 / (c*lb.Δt)^2)
 
         for j = 1:size(y, 1)
             for i = 1:size(x, 1)
@@ -71,6 +71,17 @@ function calculate!(wave::Wave, imprint::PhaseImprint)
     α = q^2 * I0 / (2 * m_e * ε_0 * c^2 * lb.ω^2 * ħ)
 
     # apply the phase to the electron beam
-    # TODO: Do the cutout for the zeropadding
-    wave.ψ .*= exp.(1im * α * real(intensity[:, :, end]))
+    # first get out the size of the intenisty array
+    n = size(intensity, 1)
+
+    # calculate the position of the left upper array in
+    # the electron wave
+    posx = round(Int, (size(wave.ψ, 1)-n)/2)
+    posy = round(Int, (size(wave.ψ, 1)-n)/2)
+
+
+    # apply the phase to the electron beam on the
+    # calculated positions
+    wave.ψ[posx:posx+n-1, posy:posy+n-1] .*=
+           exp.(1im * α * real(intensity[:, :, end]))
 end

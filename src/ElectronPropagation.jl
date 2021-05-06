@@ -1,4 +1,15 @@
 
+module ElectronPropagation
+
+# export the different kind of waves
+export ElectronBeam, LaserBeam
+
+# export helping functions
+export zeropadding!, removezeropadding!
+
+# export the different kinds of setup possibilities
+export PropTf, PhaseImprint, Aperture, Lense
+export PropDirect, Edge, Setup, propagation!
 
 # create the abstract wave type
 abstract type Wave end
@@ -14,3 +25,7 @@ global const ε_0 = 8.8541878128e-12  # vacuum permitivity
 include("./electronBeam.jl")
 include("./laserBeam.jl")
 include("./components.jl")
+include("./prep.jl")
+
+# end module
+end
