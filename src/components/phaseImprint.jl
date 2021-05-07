@@ -82,6 +82,6 @@ function calculate!(wave::Wave, imprint::PhaseImprint)
 
     # apply the phase to the electron beam on the
     # calculated positions
-    wave.ψ[posx:posx+n-1, posy:posy+n-1] .*=
+    wave.ψ[posx+1:posx+n, posy+1:posy+n] .*=
            exp.(1im * α * real(intensity[:, :, end]))
 end
