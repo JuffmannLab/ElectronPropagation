@@ -1,17 +1,31 @@
 
-"""
-    Create the lense type.
 
-    This type saves the needed properties for the lense calculation.
+"""
+    Lense(f::Real)::Lense
+
+Return a Lense type.
+
+Here a lense type is returned. The `f` value is the focal length of the lense.
+
+# Example
+```jldoctest
+julia> Lense(1)
+Lense(1)
+```
+
+See also: [`PropTf`](@ref), [`PhaseImprint`](@ref), [`Aperture`](@ref),
+[`PropDirect`](@ref), [`Edge`](@ref)
 """
 struct Lense <: Component
     f::Real   # focal length of the lense
 end
 
 """
-    Calculate the lense.
+    calculate!(wave::Wave, lense::Lense)
 
-    This function simulates the effect of a perfect lense on the wavefunction.
+Calculate the lense.
+
+This function simulates the effect of a perfect lense on the wavefunction.
 """
 function calculate!(wave::Wave, lense::Lense)
     # wave    ...   the wave type

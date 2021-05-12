@@ -1,4 +1,23 @@
 
+
+"""
+    Edge(offset::Int)::Edge
+
+Return the Edge type.
+
+Create and return the Edge type. This type describes a knife edge, that is located
+in the middle of the wavefunction. The `offset` paramter describes how many pixel
+the edge is offset of the wafunction center.
+
+# Example
+```jldoctest
+julia> Edge(0)
+Edge(0)
+```
+
+See also: [`PropTf`](@ref), [`PhaseImprint`](@ref), [`Lense`](@ref),
+[`PropDirect`](@ref), [`Edge`](@ref)
+"""
 struct Edge <: Component
     offset::Int    # number of pixel offset
 end

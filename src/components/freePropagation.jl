@@ -5,28 +5,33 @@ using ProgressMeter
 using SharedArrays
 using Distributed
 
-"""
-    Create the PropTf struct.
 
-    This struct saves the transfer functions that are needed to calculate the
-    lightfield at a given propagation distance with the transfer function
-    approach. There is one transfer function saved for the positive propagation
-    direction and one for the negative direction.
-"""
 struct PropTf <: Component
     transferfunction::Array{<:Complex}
 end
-
 
 """
     PropTf(wave::Wave, distance::Real)::PropTf
 
 Return the PropTf type.
 
-This method calculates the transfer functions that are saved in the struct
-and then creates the struct. For this it needs the propagation distance,
-the wavelnegth of the light field, and the geometry on which the lightfield
-is operating.
+Create and return the PropTf struct that is needed to calculate the
+wavefunction a given distance `distance` away. It also needs the
+`wave` type, which is either a LightBeam or ElectronBeam. Be aware that
+for this function to calculate something meaningfull, critical sampling
+must be mainitained!
+
+# Example
+```jldoctest
+julia> eb = ElectronBeam(Array{Float64}(1:2), Array{Float64}(1:2), 1);
+
+julia> PropTf(eb, 1)
+PropTf(Complex{Float64}[1.0 - 1.926465401546721e-9im 1.0 - 1.926465401546721e-9im;
+1.0 - 1.926465401546721e-9im 1.0 - 1.926465401546721e-9im])
+```
+
+See also: [`Aperture`](@ref), [`PhaseImprint`](@ref), [`Lense`](@ref),
+[`PropDirect`](@ref), [`Edge`](@ref)
 """
 function PropTf(wave::Wave, distance::Real)::PropTf
     # wave       ...   some kind of wave struct
@@ -59,10 +64,12 @@ end
 
 
 """
-    Calculate the PropTf.
+    calculate!(wave::Wavem proptff::PropTf)
 
-    This function calculates the light field in a given direction. After the
-    calculation the changed LightField object is returned.
+Calculate the PropTf.
+
+This function calculates the light field in a given direction. After the
+calculation the changed LightField object is returned.
 """
 function calculate!(wave::Wave, proptf::PropTf)
     # wave        ...   some kind of wave struct
@@ -91,7 +98,16 @@ propagated a distance `d` in z direction, with the target coordinates
 `x` and `y`. This calculation uses the direct method, and is thus really
 slow. It also can happen that there are artefacts that appear periodically
 in calculated image. This happens when the source and target coordinates do
-not match to a for me unknown criterium (i have to investigate!!)
+not match to a for me unknown criterium (i have to investigate!!).
+
+# Example
+```jldoctest
+julia> PropDirect(Array{Float64}(1:2), Array{Float64}(1:2), 1)
+PropDirect([1.0, 2.0], [1.0, 2.0], 1)
+```
+
+See also: [`PropTf`](@ref), [`PhaseImprint`](@ref), [`Lense`](@ref),
+[`Aperture`](@ref), [`Edge`](@ref)
 """
 struct PropDirect <: Component
     x::Vector{<:Real}       # Target x coordinates
@@ -101,13 +117,15 @@ end
 
 
 """
-    Calculate the propagation.
+    calculate!(wave::Wave, prop::PropDirect)
 
-    This function calculates the propagation, using direct integration
-    of the Fresnel integral. This method has the advantage that it is
-    flexible (you can change the coordinate system to change arbitrarly),
-    but the disadvantage that it doesn't use the Fourier transform, and such
-    is a lot slower.
+Calculate the propagation.
+
+This function calculates the propagation, using direct integration
+of the Fresnel integral. This method has the advantage that it is
+flexible (you can change the coordinate system to change arbitrarly),
+but the disadvantage that it doesn't use the Fourier transform, and such
+is a lot slower.
 """
 function calculate!(wave::Wave, prop::PropDirect)
     # wave   ...   wave object

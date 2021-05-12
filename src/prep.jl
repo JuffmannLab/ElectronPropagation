@@ -1,8 +1,15 @@
 """
-    Add zeropadding.
+    zeropadding!(eb::ElectronBeam, d::Real)    
 
-    This function adds the zeropadding that is needed for fourier transform
-    based propagation approaches.
+Apply zeropaddinig to `eb`.
+
+This function adds the zeropadding that is needed for fourier transform
+based propagation approaches. It calculates the critical sampling for
+the zeropadding from the information that is stored in the ElectronBeam
+type `eb` and the propagation distance `d`. The new, zeropadded wavefunction
+is saved in the ElectronBeam struct.
+
+See also: [`removezeropadding!`](@ref)
 """
 function zeropadding!(eb::ElectronBeam, d::Real)
     # eb   ...   the electron beam object
@@ -47,10 +54,15 @@ end
 
 
 """
-    Remove zeropadding.
+    removezeropadding!(eb::ElectronBeam)
 
-    This function removes the previously added zeropadding again, such that
-    only the incident fov is shown.
+Remove the zeropadding from `eb`.
+
+Removes the zeropadding from the ElectronBeam struct that is
+given with it. It is compatible with the zeropadding! function
+and does the oposite of it.
+
+See also [`zeropadding!`](@ref)
 """
 function removezeropadding!(eb::ElectronBeam)
     # eb   ...   the electron beam that needs the zeropadding removed
