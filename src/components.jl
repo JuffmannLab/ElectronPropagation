@@ -43,13 +43,24 @@ function propagation!(wave::Wave, setup::Setup)
         calculate!(wave, comp)
     end
 
-    # renormalize the wave function
-    wave.ψ ./= sqrt(sum(abs2.(wave.ψ)) * abs(wave.x[1]-wave.x[2])
-                    * abs(wave.y[1]-wave.y[2]))
+    # normalization
+    _normalization!(wave)
 end
 
 """
+    _normalization!(wave::Wave)
 
+Normalize the wave.
+
+This function will normalize the wave that is given in `wave`.
+For that it calculates the absoltue square and matches it to the normalizaion
+paramter `wave.norm` that is given in the wave type.
 """
-function _normalization(wave)
+function _normalization!(wave::Wave)
+    # wave   ...   either an electron or light wave
+    
+    # Normalize the wave function
+    wave.ψ .*= sqrt(wave.norm / sum(abs2.(wave.ψ)) *
+                    abs(wave.x[1] - wave.x[2]) *
+                    abs(wave.y[1] - wave.y[2]))
 end
