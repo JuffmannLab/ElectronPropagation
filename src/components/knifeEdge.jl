@@ -20,17 +20,19 @@ function calculate!(wave::Wave, edge::Edge)
 
     @info "Calculate the knife edge..."
 
-    # define the length of the x axis, and the dy slice
-    l = abs(wave.x[1] - wave.x[end])
+    # define the pixelsize in x and y direction
+    dx = abs(wave.x[1] - wave.x[2])
     dy = abs(wave.y[1] - wave.y[2])
+
+    display(sum(abs2.(wave.ψ)) * dx * dy)
 
     # iterate over the columns with no transmission
     for i = 1:round(Int, size(wave.ψ, 2)/2+1)+edge.offset
-        
-        # subtract the electron probability that gets lost in this column
-        wave.norm -= sqrt(sum(abs2.(wave.ψ[:, i])) * l * dy)
 
         # apply the edge
         wave.ψ[:, i] .*= 0
     end
+
+    # calculate the new normalization constant
+    wave.norm = sum(abs2.(wave.ψ)) * dx * dy
 end

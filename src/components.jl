@@ -58,9 +58,9 @@ paramter `wave.norm` that is given in the wave type.
 """
 function _normalization!(wave::Wave)
     # wave   ...   either an electron or light wave
-    
+ 
     # Normalize the wave function
-    wave.ψ .*= sqrt(wave.norm / sum(abs2.(wave.ψ)) *
-                    abs(wave.x[1] - wave.x[2]) *
+    wave.ψ .*= sqrt(wave.norm / sum(abs2.(wave.ψ)) /
+                    abs(wave.x[1] - wave.x[2]) /
                     abs(wave.y[1] - wave.y[2]))
 end
