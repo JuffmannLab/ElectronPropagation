@@ -21,8 +21,8 @@ function calculate!(wave::Wave, edge::Edge)
     @info "Calculate the knife edge..."
 
     # define the length of the x axis, and the dy slice
-    l = abs(x[1] - x[end])
-    dy = abs(y[1] - y[2])
+    l = abs(wave.x[1] - wave.x[end])
+    dy = abs(wave.y[1] - wave.y[2])
 
     # iterate over the columns with no transmission
     for i = 1:round(Int, size(wave.ψ, 2)/2+1)+edge.offset
