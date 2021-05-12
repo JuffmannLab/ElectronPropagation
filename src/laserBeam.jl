@@ -16,10 +16,18 @@ end
     LaserBeam(x::Vector{<:Real}, y::Vector{<:Real}, z::Vector{<:Real}, λ::Real
               d::Real, E::Real, Δt::Real)::LaserBeam
 
-Construct and return the LaserBeam type.
+Return the LaserBeam type.
 
 This function creates a LaserBeam type and creates the Zernike Intensity pattern
 that is used to calculate the phase imprint onto the electron beam.
+
+# Example
+```jldoctest
+julia> LaserBeam(Array(1:2), Array(1:2), Array(1:2), 1035e-9, 15e-6, 40e-6, 280e-15)
+LaserBeam([0 0; 0 0], [1, 2], [1, 2], [1, 2], 1.8199532051293268e15, 4.0e-5, 2.8e-13)
+```
+
+See also: [`ElectronBeam`](@ref)
 """
 function LaserBeam(x::Vector{<:Real}, y::Vector{<:Real}, z::Vector{<:Real},
                    λ::Real, d::Real, E::Real, Δt::Real)::LaserBeam

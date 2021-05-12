@@ -1,7 +1,7 @@
 name = "ElectronPropagation"
 uuid = "f87e0bc7-ece5-4961-a0ec-86ec363abcc0"
 authors = ["Matthias Schneller <matthias.schneller@gmail.com>"]
-version = "0.1.1"
+version = "0.1.2"
 
 [deps]
 Distributed = "8ba89e20-285c-5b6f-9357-94700520ee1b"

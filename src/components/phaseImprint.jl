@@ -2,9 +2,24 @@
 using FFTW
 
 """
-    Struct for the phase imprint.
+    PhaseImprint(lb::LaserBeam)::PhaseImprint
 
-    This struct is the basis vor the Phase imprint that can be done.
+Return the PhaseImprint type.
+
+The PhaseImprint type is generated and returned. The `lb`
+value has to be a LaserBeam type, and represents the
+laser beam that will make the phase imprint.
+
+# Example
+```jldoctest
+julia> lb = LaserBeam(Array(1:2), Array(1:2), Array(1:2), 1035e-9, 15e-6, 40e-6, 280e-15);
+
+julia> PhaseImprint(lb)
+PhaseImprint(LaserBeam([0 0; 0 0], [1, 2], [1, 2], [1, 2], 1.8199532051293268e15, 4.0e-5, 2.8e-13))
+```
+
+See also: [`PropTf`](@ref), [`Aperture`](@ref), [`Lense`](@ref),
+[`PropDirect`](@ref), [`Edge`](@ref)
 """
 struct PhaseImprint <: Component
     lb::LaserBeam     # the laser beam type
