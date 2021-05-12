@@ -47,3 +47,9 @@ function propagation!(wave::Wave, setup::Setup)
     wave.ψ ./= sqrt(sum(abs2.(wave.ψ)) * abs(wave.x[1]-wave.x[2])
                     * abs(wave.y[1]-wave.y[2]))
 end
+
+"""
+
+"""
+function _normalization(wave)
+end

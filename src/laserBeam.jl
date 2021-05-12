@@ -10,6 +10,7 @@ mutable struct LaserBeam <: Wave
     ω::Real             # the laser frequency
     E::Real             # energy per pulse
     Δt::Real            # pulse length
+    norm::Real          # the normalization parameter
 end
 
 """
@@ -45,8 +46,11 @@ function LaserBeam(x::Vector{<:Real}, y::Vector{<:Real}, z::Vector{<:Real},
     # calculate the zernike intensity pattern
     I = _zernikeAmplitude(x, d)
 
+    # set the normalization parameter to 1 (100% of the photons are still present)
+    norm = 1.
+
     # return the LaserBeam struct
-    return LaserBeam(I, x, y, z, ω, E, Δt)
+    return LaserBeam(I, x, y, z, ω, E, Δt, norm)
 end
 
 

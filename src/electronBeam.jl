@@ -10,6 +10,7 @@ mutable struct ElectronBeam <: Wave
     y::Array{<:Real}        # y-axis
     n_x::Integer            # Array size before zeropadding x
     n_y::Integer            # Array size before zeropadding y
+    norm::Real              # normalization parameter
 end
 
 
@@ -54,6 +55,9 @@ function ElectronBeam(x::Vector{<:AbstractFloat}, y::Vector{<:AbstractFloat}, U:
     # normalze the input electron beam
     ψ ./= sqrt(sum(abs2.(ψ)) * abs(x[1]-x[2]) * abs(y[1]-y[2]))
 
+    # set the normalization parameter to 1 (100% of the electrons are present)
+    norm = 1
+
     # return the electron beam struct
-    return ElectronBeam(ψ, λ, x, y, size(x, 1), size(y, 1))
+    return ElectronBeam(ψ, λ, x, y, size(x, 1), size(y, 1), norm)
 end
