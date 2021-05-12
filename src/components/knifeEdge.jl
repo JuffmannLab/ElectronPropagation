@@ -28,7 +28,7 @@ function calculate!(wave::Wave, edge::Edge)
     for i = 1:round(Int, size(wave.ψ, 2)/2+1)+edge.offset
         
         # subtract the electron probability that gets lost in this column
-        wave.norm -= sum(abs2.(wave.ψ[:, i])) * l * dy
+        wave.norm -= sqrt(sum(abs2.(wave.ψ[:, i])) * l * dy)
 
         # apply the edge
         wave.ψ[:, i] .*= 0
