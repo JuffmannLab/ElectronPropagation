@@ -17,22 +17,30 @@ struct Setup
 end
 
 """
-    Create the setup.
+    Setup(comps::Component...)::Setup
 
-    In this struct the whole setup is saved as an array of components.
-    The setup will be calculated in the order of appearence in the function
-    definition.
+Return the setup.
+
+Create and return the setup type. This type will save the current
+components in the order that they should be calculated. The components
+are in the varargs `comps`.
+
+See also: [`propagation!`](@ref)
 """
-function Setup(comps::Component...)
+function Setup(comps::Component...)::Setup
     # comps...  varargs for the input of the components
     return Setup(collect(comps))
 end
 
 """
-    Propagate the setup.
+    propagation!(wave::Wave, setup::Setup)
 
-    This function propagates the given wave through the given setup.
-    The wave will be altered according to the propagation.
+Propagate the setup.
+
+This function propagates the given wave `wave` through the given setup `setup`.
+The wave will be altered according to the propagation.
+
+See also: [`Setup`](@ref)
 """
 function propagation!(wave::Wave, setup::Setup)
     # wave    ...   The wave that should be propagated

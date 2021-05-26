@@ -84,8 +84,10 @@ function _zernikeAmplitude(x::Vector{<:Real}, d::Real)::Matrix{<:Real}
     # +2 because the evaluateZernike function leaves some room that is not used
     m = round(Int, d / dx) + 3
 
+    # evaluate the zernike polynomials, 4 is the defocus, 11 is the spherical aberration
+    ϕ = evaluateZernike(m, [4, 11], [1., 0.3], index=:Noll)
+    
     # shift the matrix elements to be positive
-    ϕ = evaluateZernike(m, 4, 1., index=:Noll)
     ϕ .+= abs(minimum(ϕ))
 
     # calculate the relative shift to apply the zernike polynomials to the
