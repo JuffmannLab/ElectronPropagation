@@ -1,17 +1,15 @@
 
 # import statements
 using FFTW
-using ProgressMeter
 
-
-struct PropTf <: Component
+struct Free <: Component
     transferfunction::Array{<:Complex}
 end
 
 """
-    PropTf(wave::Wave, distance::Real)::PropTf
+    Free(wave::Wave, distance::Real)::PropTf
 
-Return the PropTf type.
+Return the Free type.
 
 Create and return the PropTf struct that is needed to calculate the
 wavefunction a given distance `distance` away. It also needs the
@@ -23,15 +21,14 @@ must be mainitained!
 ```jldoctest
 julia> eb = ElectronBeam(Array{Float64}(1:2), Array{Float64}(1:2), 1);
 
-julia> PropTf(eb, 1)
-PropTf(Complex{Float64}[1.0 - 1.926465401546721e-9im 1.0 - 1.926465401546721e-9im;
+julia> Free(eb, 1)
+Free(Complex{Float64}[1.0 - 1.926465401546721e-9im 1.0 - 1.926465401546721e-9im;
 1.0 - 1.926465401546721e-9im 1.0 - 1.926465401546721e-9im])
 ```
 
-See also: [`Aperture`](@ref), [`PhaseImprint`](@ref), [`Lense`](@ref),
-[`PropDirect`](@ref), [`Edge`](@ref)
+See also: [`Aperture`](@ref), [`PhaseImprint`](@ref), [`Lens`](@ref), [`Edge`](@ref)
 """
-function PropTf(wave::Wave, distance::Real)::PropTf
+function Free(wave::Wave, distance::Real)::Free
     # wave       ...   some kind of wave struct
     # distance   ...   propagation distance
 
@@ -57,29 +54,27 @@ function PropTf(wave::Wave, distance::Real)::PropTf
     @. transferfunction = exp(-1im * π * λ * distance * (fx^2 + fy'^2))
 
     # shift the transferfunction and return thhe PropTf object
-    return PropTf(fftshift(transferfunction))
+    return Free(fftshift(transferfunction))
 end
 
 
 """
-    calculate!(wave::Wavem proptff::PropTf)
+    calculate!(wave::Wavem free::Free)
 
-Calculate the PropTf.
+Calculate the Free.
 
 This function calculates the light field in a given direction. After the
 calculation the changed LightField object is returned.
 """
-function calculate!(wave::Wave, proptf::PropTf)
+function calculate!(wave::Wave, free::Free)
     # wave        ...   some kind of wave struct
     # proptf      ...   propagation object
-
-    @info "Calculate transfer function propagation..."
 
     # Fouriertransform the input wave
     Ψ = fft(fftshift(wave.ψ))
 
     # apply the transferfunction
-    Ψ .*= proptf.transferfunction
+    Ψ .*= free.transferfunction
 
     # calculate the inverse fouriertransform
     wave.ψ = ifftshift(ifft(Ψ))

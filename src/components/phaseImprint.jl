@@ -39,8 +39,6 @@ function calculate!(wave::Wave, imprint::PhaseImprint)
     # wave      ...   the electron beam
     # imprint   ...   the imprint object
 
-    @info "Calculate the phase imprint..."
-
     # extract the laserbeam type out of the imprint type
     lb = imprint.lb
     x = lb.x

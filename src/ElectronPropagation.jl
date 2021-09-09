@@ -8,8 +8,8 @@ export ElectronBeam, LaserBeam, loadintensity
 export zeropadding!, removezeropadding!
 
 # export the different kinds of setup possibilities
-export PropTf, PhaseImprint, Aperture, Lens
-export PropDirect, Edge, Setup, propagation!
+export Free, PhaseImprint, Aperture, Lens
+export Edge, Setup, propagation!
 
 # create the abstract wave type
 abstract type Wave end
