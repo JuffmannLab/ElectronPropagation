@@ -35,8 +35,8 @@ function calculate!(wave::Wave, lens::Lens)
     k = 2 * π / wave.λ
 
     # add the lense phase onto the wavefunction
-    for i = 1:size(wave.ψ, 1)
-        for j = 1:size(wave.ψ, 2)
+    for j = 1:size(wave.ψ, 2)
+        for i = 1:size(wave.ψ, 1)
             wave.ψ[i, j] *= exp(-1im * k / 2 / lens.f * (wave.x[i]^2 + wave.y[j]^2))
         end
     end

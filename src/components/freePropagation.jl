@@ -36,6 +36,7 @@ function Free(wave::Wave, distance::Real)::Free
     x = wave.x
     y = wave.y
     λ = wave.λ
+    k = 2 * π / λ
 
     # get some information out of the transverse coordinates
     dx = abs(x[1] - x[2])
@@ -49,11 +50,12 @@ function Free(wave::Wave, distance::Real)::Free
 
     # create the empty transferfunction arrays
     transferfunction = similar(wave.ψ)
+    irfunction = similar(wave.ψ)
 
     # fill the transferfunction arrays with the proper values
     @. transferfunction = exp(-1im * π * λ * distance * (fx^2 + fy'^2))
 
-    # shift the transferfunction and return thhe PropTf object
+    # shift the transferfunction and return the Free object
     return Free(fftshift(transferfunction))
 end
 
