@@ -2,13 +2,13 @@
 module ElectronPropagation
 
 # export the different kind of waves
-export ElectronBeam, LaserBeam
+export ElectronBeam, LaserBeam, loadintensity
 
 # export helping functions
 export zeropadding!, removezeropadding!
 
 # export the different kinds of setup possibilities
-export PropTf, PhaseImprint, Aperture, Lense
+export PropTf, PhaseImprint, Aperture, Lens
 export PropDirect, Edge, Setup, propagation!
 
 # create the abstract wave type

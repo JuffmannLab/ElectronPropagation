@@ -1,111 +1,78 @@
 
-using ZernikePolynomials
+using Images
 
 # The Laser beam struct, it saves important information about the laser beam
 mutable struct LaserBeam <: Wave
     I::Matrix{<:Real}   # Laser intensity distribution (assume uniform in z)
+    env::Vector{<:Real} # temporal envelope
     x::Vector{<:Real}   # the x coordinates
     y::Vector{<:Real}   # the y coordinates
-    z::Vector{<:Real}   # the z coordinates
+    t::Vector{<:Real}   # the t coordinates
     ω::Real             # the laser frequency
     E::Real             # energy per pulse
-    Δt::Real            # pulse length
     norm::Real          # the normalization parameter
 end
 
 """
-    LaserBeam(x::Vector{<:Real}, y::Vector{<:Real}, z::Vector{<:Real}, λ::Real
-              d::Real, E::Real, Δt::Real)::LaserBeam
+    LaserBeam(I::Matrix{<Real}, env::Vector{<:Real}, x::Vector{<:Real},
+              y::Vector{<:Real}, t::Vector{<:Real}, λ::Real, E::Real)::LaserBeam
 
 Return the LaserBeam type.
 
-This function creates a LaserBeam type and creates the Zernike Intensity pattern
-that is used to calculate the phase imprint onto the electron beam.
+Take the 2D intensity pattern `I`, the temporal envelope function `env`, the coordinate system
+`x`, `y` and `t`, the wavelength `λ` and the energy per laser pulse `E`. With these informations
+a LaserBeam object is created and returned.
 
 # Example
 ```jldoctest
-julia> LaserBeam(Array(1:2), Array(1:2), Array(1:2), 1035e-9, 15e-6, 40e-6, 280e-15)
-LaserBeam([0 0; 0 0], [1, 2], [1, 2], [1, 2], 1.8199532051293268e15, 4.0e-5, 2.8e-13)
+julia> LaserBeam(ones(2, 2), Array(1:2), Array(1:2), Array(1:2), Array(1:2), 1035e-9, 13e-6)
+LaserBeam([1.0 1.0; 1.0 1.0], [1, 2], [1, 2], [1, 2], [1, 2], 1.8199532051293268e15, 1.3e-5, 1.0)
 ```
 
 See also: [`ElectronBeam`](@ref)
 """
-function LaserBeam(x::Vector{<:Real}, y::Vector{<:Real}, z::Vector{<:Real},
-                   λ::Real, d::Real, E::Real, Δt::Real)::LaserBeam
+function LaserBeam(I::Matrix{<:Real}, env::Vector{<:Real}, x::Vector{<:Real},
+                   y::Vector{<:Real}, t::Vector{<:Real}, λ::Real, E::Real)::LaserBeam
+    # I    ...   laser beam intensity distribution
     # x    ...   x coordinates
     # y    ...   y coordinates, need to be the same as x!!!
-    # z    ...   z coordinates
     # λ    ...   wavelength
-    # d    ...   diameter of the beam
     # E    ...   energy that is in the light pulse
-    # Δt   ...   pulse length of the laser
 
     # calculate the angular frequency
     ω = 2 * π * c / λ
-
-    # calculate the zernike intensity pattern
-    I = _zernikeAmplitude(x, d)
 
     # set the normalization parameter to 1 (100% of the photons are still present)
     norm = 1.
 
     # return the LaserBeam struct
-    return LaserBeam(I, x, y, z, ω, E, Δt, norm)
+    return LaserBeam(I, env, x, y, t, ω, E, norm)
 end
 
-
 """
-    _zernikeAmplitude(x::Vector{<:Real}, d::Real)::Matrix{<:Real}
+    loadintensity(s::String)::Matrix{<:Real}
 
-Return a Zernike Beam.
+Return the intensity matrix.
 
-This function takes the coordinates `x`, and the diameter `d` to construct
-a Amplitude of the spherical aberration zernike polynomial, with the given
-diameter. The polynimial will be calculated in 2D with the sides being the `x`
-coordinate. Due to the nature of the ZernikePolynomials package, only quadratic
-shapes can be returned.
+Load the intensity image from the file at `s`. The image will then
+be normalized, such that the values range from 0 to 1, and then returned as
+a Matrix with the datatype being Float64.
+
+```jldoctest
+julia> loadintensity("test.png")
+2×2 Matrix{Float64}:
+1.0  1.0
+1.0  1.0
+```
 """
-function _zernikeAmplitude(x::Vector{<:Real}, d::Real)::Matrix{<:Real}
-    # x   ...   coordinates for the amplitude
-    # d   ...   the diameter of the beam
+function loadintensity(s::String)::Matrix{<:Real}
+    # load the image, save it in a matrix
+    input = Float64.(Gray.(load(s)))
 
-    # Create the empty laser intensity matrix
-    I = Matrix{eltype(x)}(undef, size(x, 1), size(x, 1))
+    # normalize the image between 0 and 1
+    input .-= minimum(input)
+    input ./= maximum(input)
 
-    # change the diameter to the radius that is needed four our calculation
-    r = d / 2
-
-    # calculate the dx value (dy MUST be the same... because the zernike
-    # package only supplies with symmetric outputs, and i am lazy)
-    # also x != y
-    dx = abs(x[1] - x[2])
-
-    # calculate the amount of pixels that are the zernike phase diameter
-    # +2 because the evaluateZernike function leaves some room that is not used
-    m = round(Int, d / dx) + 3
-
-    # evaluate the zernike polynomials, 4 is the defocus, 11 is the spherical aberration
-    ϕ = evaluateZernike(m, [4, 11], [1., 0.3], index=:Noll)
-    
-    # shift the matrix elements to be positive
-    ϕ .+= abs(minimum(ϕ))
-
-    # calculate the relative shift to apply the zernike polynomials to the
-    # wavefunction
-    ishift = round(Int, (size(I, 1)-size(ϕ, 1))/2)
-    jshift = round(Int, (size(I, 2)-size(ϕ, 2))/2)
-
-    # fill the intensity array with either 0 or the zernike amplitude
-    for j = 1:size(I, 2)
-        for i = 1:size(I, 1)
-            if r^2 >= x[i]^2+x[j]^2
-                I[i, j] = ϕ[i-ishift, j-jshift]
-            else
-                I[i, j] = 0
-            end
-        end
-    end
-
-    # return the intesity matrix
-    return I
+    # return the wanted image
+    return input
 end

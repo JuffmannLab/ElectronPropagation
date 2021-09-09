@@ -7,7 +7,7 @@ abstract type Component end
 include("./components/aperture.jl")
 include("./components/freePropagation.jl")
 include("./components/knifeEdge.jl")
-include("./components/lense.jl")
+include("./components/lens.jl")
 include("./components/mcp.jl")
 include("./components/phaseImprint.jl")
 
