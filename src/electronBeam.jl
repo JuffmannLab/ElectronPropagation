@@ -51,7 +51,7 @@ function ElectronBeam(ψ::Matrix{<:Complex}, x::Vector{<:AbstractFloat},
     # U   ...   the acceleration voltage of the electron beam
 
     # define the de'Broglie wavelength of the electrons
-    λ = 2 * π * ħ / sqrt( 2 * U * q / m_e ) / m_e
+    λ = 2 * π * ħ / sqrt( 2 * U * q * m_e) / sqrt(1 + q * U / 2 / m_e / c^2)
 
     # normalize the input beam
     ψ ./= sqrt(sum(abs2.(ψ))*abs(x[1]-x[2])*abs(y[1]-y[2]))
