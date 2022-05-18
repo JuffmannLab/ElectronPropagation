@@ -8,8 +8,6 @@ mutable struct ElectronBeam <: Wave
     λ::Real                 # de'Broglie wavelength
     x::Array{<:Real}        # x-axis
     y::Array{<:Real}        # y-axis
-    n_x::Integer            # Array size before zeropadding x
-    n_y::Integer            # Array size before zeropadding y
     norm::Real              # normalization parameter
 end
 
@@ -60,5 +58,5 @@ function ElectronBeam(ψ::Matrix{<:Complex}, x::Vector{<:AbstractFloat},
     norm = 1.
 
     # return the electron beam struct
-    return ElectronBeam(ψ, λ, x, y, size(x, 1), size(y, 1), norm)
+    return ElectronBeam(ψ, λ, x, y, norm)
 end
