@@ -49,8 +49,7 @@ function calculate!(wave::Wave, imprint::PhaseImprint)
     prefactor = - α / (2*π * (1 + β)) * imprint.lb.E / Ee * imprint.lb.λ / norm
 
     for j in eachindex(wave.y), i in eachindex(wave.x)
-        wave.ψ[i, j] *= exp(prefactor * interpolation(imprint.lb.I, imprint.lb.x, imprint.lb.y,
-                                                      wave.x[i], wave.y[j]))
+        wave.ψ[i, j] *= exp(1im * prefactor * interpolation(imprint.lb.I, imprint.lb.x, imprint.lb.y, wave.x[i], wave.y[j]))
     end
 end
 
