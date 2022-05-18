@@ -61,10 +61,6 @@ function calculate!(wave::Wave, imprint::PhaseImprint)
     α = q^2 * I0 / (2 * m_e * ε_0 * c * lb.ω^2 * ħ)
 
     # calculate the phase imprint.
-    # CAUTION: this calculation method assumes that the
-    # interaction region is much smaller then the 
-    # rayleigh length of the laser beam! (--> z component of the intensity
-    # is only governed by the envelope and NOT the beam change)
     for j = 1:size(lb.I, 2)
         for i = 1:size(lb.I, 1)
             phase[i, j] = I0 * α * lb.I[i, j] * env_int
