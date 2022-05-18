@@ -6,11 +6,9 @@ abstract type Component end
 # include all the components
 include("./components/aperture.jl")
 include("./components/freePropagation.jl")
-include("./components/knifeEdge.jl")
 include("./components/lens.jl")
 include("./components/mcp.jl")
 include("./components/phaseImprint.jl")
-include("./components/propDirect.jl")
 
 # The setup struct
 struct Setup
