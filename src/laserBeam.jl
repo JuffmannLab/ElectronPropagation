@@ -1,18 +1,6 @@
 
 using Images
 
-# The Laser beam struct, it saves important information about the laser beam
-mutable struct LaserBeam <: Wave
-    I::Matrix{<:Real}   # Laser intensity distribution (assume uniform in z)
-    env::Vector{<:Real} # temporal envelope
-    x::Vector{<:Real}   # the x coordinates
-    y::Vector{<:Real}   # the y coordinates
-    t::Vector{<:Real}   # the t coordinates
-    ω::Real             # the laser frequency
-    E::Real             # energy per pulse
-    norm::Real          # the normalization parameter
-end
-
 """
     LaserBeam(I::Matrix{<Real}, env::Vector{<:Real}, x::Vector{<:Real},
               y::Vector{<:Real}, t::Vector{<:Real}, λ::Real, E::Real)::LaserBeam
@@ -31,23 +19,14 @@ LaserBeam([1.0 1.0; 1.0 1.0], [1, 2], [1, 2], [1, 2], [1, 2], 1.8199532051293268
 
 See also: [`ElectronBeam`](@ref)
 """
-function LaserBeam(I::Matrix{<:Real}, env::Vector{<:Real}, x::Vector{<:Real},
-                   y::Vector{<:Real}, t::Vector{<:Real}, λ::Real, E::Real)::LaserBeam
-    # I    ...   laser beam intensity distribution
-    # x    ...   x coordinates
-    # y    ...   y coordinates, need to be the same as x!!!
-    # λ    ...   wavelength
-    # E    ...   energy that is in the light pulse
-
-    # calculate the angular frequency
-    ω = 2 * π * c / λ
-
-    # set the normalization parameter to 1 (100% of the photons are still present)
-    norm = 1.
-
-    # return the LaserBeam struct
-    return LaserBeam(I, env, x, y, t, ω, E, norm)
+mutable struct LaserBeam <: Wave
+    I::Matrix{<:Real}
+    λ::Real
+    E::Real
+    x::Vector{<:Real}
+    y::Vector{<:Real}
 end
+
 
 """
     loadintensity(s::String)::Matrix{<:Real}

@@ -18,55 +18,81 @@ julia> PhaseImprint(lb)
 PhaseImprint(LaserBeam([0 0; 0 0], [1, 2], [1, 2], [1, 2], 1.8199532051293268e15, 4.0e-5, 2.8e-13))
 ```
 
-See also: [`PropTf`](@ref), [`Aperture`](@ref), [`Lense`](@ref),
-[`PropDirect`](@ref), [`Edge`](@ref)
+See also: [`Free`](@ref), [`Aperture`](@ref), [`Lense`](@ref), [`ElectronBeam`](@ref)
 """
 struct PhaseImprint <: Component
-    lb::LaserBeam     # the laser beam type
+    lb::LaserBeam
 end
 
 
 """
-    Imprint the phase.
+Imprint the phase.
 
-    This function imprints a phase on the electron wave.
-    This function is only working if the coordinates of the wavefunction
-    are the same in x and y direction! This function only works if the
-    x and y components of the laser beam are the same as the x and y coordinates
-    of the wave object.
+This function imprints a phase on the electron wave.
+This function is only working if the coordinates of the wavefunction
+are the same in x and y direction! This function only works if the
+x and y components of the laser beam are the same as the x and y coordinates
+of the wave object.
 """
 function calculate!(wave::Wave, imprint::PhaseImprint)
-    # wave      ...   the electron beam
-    # imprint   ...   the imprint object
+    β = wave.v / c
+    γ = 1 /sqrt(1-β^2)
 
-    # extract the laserbeam type out of the imprint type
-    lb = imprint.lb
-    x = lb.x
-    y = lb.y
-    t = lb.t
+    Ee = γ * m_e * c^2
+    α = q^2 / (ħ * c) / (4 * π * ε_0)
 
-    # define the dx dy dz values
-    dx = abs(x[2]-x[1])
-    dy = abs(y[2]-y[1])
-    dt = abs(t[1]-t[2])
+    norm = sum(imprint.lb.I) * Δx * Δy
 
-    # create the phase function
-    phase = similar(lb.I)
+    prefactor = - α / (2*π * (1 + β)) * imprint.lb.E / Ee * imprint.lb.λ / norm
 
-    # calculate the normalization constant
-    env_int = sum(lb.env) * dt
-    I0 = lb.E / (sum(lb.I .* env_int) * dx * dy)
+    for j in eachindex(wave.y), i in eachindex(wave.x)
+        wave.ψ[i, j] *= exp(prefactor * interpolation(imprint.lb.I, imprint.lb.x, imprint.lb.y,
+                                                      wave.x[i], wave.y[j]))
+    end
+end
 
-    # calculate constants
-    α = q^2 * I0 / (2 * m_e * ε_0 * c * lb.ω^2 * ħ)
 
-    # calculate the phase imprint.
-    for j = 1:size(lb.I, 2)
-        for i = 1:size(lb.I, 1)
-            phase[i, j] = I0 * α * lb.I[i, j] * env_int
-        end
+"""
+    interpolation(A::Matrix{<:Real}, coords_x::Vector{<:Real},
+                   coords_y::Vector{<:Real}, x::Real, y::Real)::Real
+
+Return the bilinear interpolation.
+Calculate and return the bilinear interpolation on the Matrix `A`
+with the coordinates `coords_x` and `coords_y` at the point with
+the position `x`, `y`.
+"""
+function interpolation(A::Matrix{<:Real}, coords_x::Vector{<:Real},
+                       coords_y::Vector{<:Real}, x::Real, y::Real)::Real
+
+    # if the value is not in the area of coords return 0
+    if x < coords_x[1] || x > coords_x[end]
+        return zero(eltype(A))
+    elseif y < coords_y[1] || y > coords_y[end]
+        return zero(eltype(A))
     end
 
-    # apply the phase to the electron beam
-    @. wave.ψ *= exp(1im * phase)
+    # calculate the Δx and Δy values
+    Δx = abs(coords_x[1]-coords_x[2])
+    Δy = abs(coords_y[1]-coords_y[2])
+
+    # calculate the bins in which the x and y values are
+    n = round(Int, (x-coords_x[1]) / Δx, RoundDown) + 1
+    m = round(Int, (y-coords_y[1]) / Δy, RoundDown) + 1
+
+    # interpolation in x direction on both y-points
+    k1 = (A[n, m] - A[n+1, m]) / (coords_x[n] - coords_x[n+1])
+    d1 = A[n, m] - k1 * coords_x[n]
+
+    k2 = (A[n, m+1] - A[n+1, m+1]) / (coords_x[n] - coords_x[n+1])
+    d2 = A[n, m+1] - k2 * coords_x[n]
+
+    A1 = k1 * x + d1
+    A2 = k2 * x + d2
+
+    # use the interpolated values on the x-axis for the interpolation in the y axis
+    k = (A1 - A2) / (coords_y[m] - coords_y[m+1])
+    d = A1 - k * coords_y[m]
+
+    # return the interpolated value
+    return k * y + d
 end
