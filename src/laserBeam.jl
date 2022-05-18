@@ -1,20 +1,22 @@
 
-using Images
-
 """
-    LaserBeam(I::Matrix{<Real}, env::Vector{<:Real}, x::Vector{<:Real},
-              y::Vector{<:Real}, t::Vector{<:Real}, λ::Real, E::Real)::LaserBeam
+    LaserBeam(I::Matrix{<Real}, λ::Real, E::Real, x::Vector{<:Real}, y::Vector{<:Real})
 
 Return the LaserBeam type.
 
-Take the 2D intensity pattern `I`, the temporal envelope function `env`, the coordinate system
-`x`, `y` and `t`, the wavelength `λ` and the energy per laser pulse `E`. With these informations
-a LaserBeam object is created and returned.
+Save the intensity distribution `I`, the wavelength `λ`, the pulse energy `E`
+and the coordinates `x` and `y` in the LaserBeam struct that is returned.
 
 # Example
 ```jldoctest
-julia> LaserBeam(ones(2, 2), Array(1:2), Array(1:2), Array(1:2), Array(1:2), 1035e-9, 13e-6)
-LaserBeam([1.0 1.0; 1.0 1.0], [1, 2], [1, 2], [1, 2], [1, 2], 1.8199532051293268e15, 1.3e-5, 1.0)
+julia> I = rand(Float64, 2, 2)
+2×2 Matrix{Float64}:
+ 0.956952  0.353413
+ 0.52275   0.874929
+
+julia> LaserBeam(I, 1e-6, 1e-6, [1, 2], [1, 2])
+LaserBeam([0.9569521001448673 0.35341262246269656; 0.5227499716351234 0.8749291118118734], 1.0e-6, 1.0e-6, [1, 2], [1, 2])
+
 ```
 
 See also: [`ElectronBeam`](@ref)
@@ -25,33 +27,4 @@ mutable struct LaserBeam <: Wave
     E::Real
     x::Vector{<:Real}
     y::Vector{<:Real}
-end
-
-
-"""
-    loadintensity(s::String)::Matrix{<:Real}
-
-Return the intensity matrix.
-
-Load the intensity image from the file at `s`. The image will then
-be normalized, such that the values range from 0 to 1, and then returned as
-a Matrix with the datatype being Float64.
-
-```jldoctest
-julia> loadintensity("test.png")
-2×2 Matrix{Float64}:
-1.0  1.0
-1.0  1.0
-```
-"""
-function loadintensity(s::String)::Matrix{<:Real}
-    # load the image, save it in a matrix
-    input = Float64.(Gray.(load(s)))
-
-    # normalize the image between 0 and 1
-    input .-= minimum(input)
-    input ./= maximum(input)
-
-    # return the wanted image
-    return input
 end
