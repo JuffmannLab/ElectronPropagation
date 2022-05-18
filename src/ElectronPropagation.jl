@@ -2,7 +2,7 @@
 module ElectronPropagation
 
 # export the different kind of waves
-export ElectronBeam, LaserBeam, loadintensity
+export ElectronBeam, LaserBeam, loadintensity, deBroglieWavelength
 
 # export the different kinds of setup possibilities
 export Free, PhaseImprint, Aperture, Lens, PropDirect
