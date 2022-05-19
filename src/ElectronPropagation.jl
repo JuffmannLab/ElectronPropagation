@@ -8,9 +8,6 @@ export ElectronBeam, LaserBeam, loadintensity, deBroglieWavelength
 export Free, PhaseImprint, Aperture, Lens, PropDirect
 export Edge, Setup, propagation!
 
-# create the abstract wave type
-abstract type Wave end
-
 # define some physical constants
 global const c = 299792458           # the speed of light
 global const ħ = 1.054571817e-34     # the reduced planck constant

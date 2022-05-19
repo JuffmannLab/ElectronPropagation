@@ -20,7 +20,7 @@ ElectronBeam(ComplexF64[1.0 + 0.0im 1.0 + 0.0im; 1.0 + 0.0im 1.0 + 0.0im], 1.0e-
 
 See also: [`deBroglieWavelength`, `LaserBeam`](@ref)
 """
-mutable struct ElectronBeam <: Wave
+mutable struct ElectronBeam
     ψ::Matrix{<:Complex}
     λ::Real
     v::Real

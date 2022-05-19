@@ -27,9 +27,7 @@ Calculate the lense.
 
 This function simulates the effect of a perfect lens on the wavefunction.
 """
-function calculate!(wave::Wave, lens::Lens)
-    # wave    ...   the wave type
-    # lense   ...   the lense type
+function calculate!(wave::ElectronBeam, lens::Lens)
 
     # define the wavevector
     k = 2 * π / wave.λ

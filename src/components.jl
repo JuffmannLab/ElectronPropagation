@@ -31,7 +31,7 @@ function Setup(comps::Component...)::Setup
 end
 
 """
-    propagation!(wave::Wave, setup::Setup)
+    propagation!(wave::ElectronBeam, setup::Setup)
 
 Propagate the setup.
 
@@ -40,7 +40,7 @@ The wave will be altered according to the propagation.
 
 See also: [`Setup`](@ref)
 """
-function propagation!(wave::Wave, setup::Setup)
+function propagation!(wave::ElectronBeam, setup::Setup)
     for comp in setup.setup
         calculate!(wave, comp)
     end

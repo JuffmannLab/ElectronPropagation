@@ -26,11 +26,7 @@ end
 
     Apply the aperture to a given wavefunction.
 """
-function calculate!(wave::Wave, aperture::Aperture)
-    # wave       ...   the wave type
-    # aperture   ...   the aperture type
-
-    @info "Calculate the aperture..."
+function calculate!(wave::ElectronBeam, aperture::Aperture)
 
     # apply the aperute to the wavefunction
     for i = 1:size(wave.x, 1)

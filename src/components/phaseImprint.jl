@@ -34,7 +34,7 @@ are the same in x and y direction! This function only works if the
 x and y components of the laser beam are the same as the x and y coordinates
 of the wave object.
 """
-function calculate!(wave::Wave, imprint::PhaseImprint)
+function calculate!(wave::ElectronBeam, imprint::PhaseImprint)
     Δx = abs(imprint.lb.x[1] - imprint.lb.x[2])
     Δy = abs(imprint.lb.y[1] - imprint.lb.y[2])
 

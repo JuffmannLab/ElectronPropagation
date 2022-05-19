@@ -13,7 +13,7 @@ Return the Free type.
 
 Create and return the PropTf struct that is needed to calculate the
 wavefunction a given distance `distance` away. It also needs the
-`wave` type, which is either a LightBeam or ElectronBeam. Be aware that
+`wave`, which is an ElectronBeam type. Be aware that
 for this function to calculate something meaningfull, critical sampling
 must be mainitained!
 
@@ -28,9 +28,7 @@ Free(Complex{Float64}[1.0 - 1.926465401546721e-9im 1.0 - 1.926465401546721e-9im;
 
 See also: [`Aperture`](@ref), [`PhaseImprint`](@ref), [`Lens`](@ref), [`Edge`](@ref)
 """
-function Free(wave::Wave, distance::Real)::Free
-    # wave       ...   some kind of wave struct
-    # distance   ...   propagation distance
+function Free(wave::ElectronBeam, distance::Real)::Free
 
     # get the x axis out of the wave struct
     x = wave.x
@@ -68,9 +66,7 @@ Calculate the Free.
 This function calculates the light field in a given direction. After the
 calculation the changed LightField object is returned.
 """
-function calculate!(wave::Wave, free::Free)
-    # wave        ...   some kind of wave struct
-    # proptf      ...   propagation object
+function calculate!(wave::ElectronBeam, free::Free)
 
     # Fouriertransform the input wave
     Ψ = fft(fftshift(wave.ψ))

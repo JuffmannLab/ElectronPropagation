@@ -21,7 +21,7 @@ LaserBeam([0.9569521001448673 0.35341262246269656; 0.5227499716351234 0.87492911
 
 See also: [`ElectronBeam`](@ref)
 """
-mutable struct LaserBeam <: Wave
+mutable struct LaserBeam
     I::Matrix{<:Real}
     λ::Real
     E::Real
