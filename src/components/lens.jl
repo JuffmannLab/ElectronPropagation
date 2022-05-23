@@ -28,14 +28,9 @@ Calculate the lense.
 This function simulates the effect of a perfect lens on the wavefunction.
 """
 function calculate!(wave::ElectronBeam, lens::Lens)
-
-    # define the wavevector
-    k = 2 * π / wave.λ
-
-    # add the lense phase onto the wavefunction
-    for j = 1:size(wave.ψ, 2)
-        for i = 1:size(wave.ψ, 1)
-            wave.ψ[i, j] *= exp(-1im * k / 2 / lens.f * (wave.x[i]^2 + wave.y[j]^2))
-        end
+    if lens.f == 0
+        return
+    else
+        wave.ψ .*= @. exp(-1im * π / wave.λ / lens.f * (wave.x^2 + wave.y'^2))
     end
 end

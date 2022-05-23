@@ -26,9 +26,7 @@ are in the varargs `comps`.
 
 See also: [`propagation!`](@ref)
 """
-function Setup(comps::Component...)::Setup
-    return Setup(collect(comps))
-end
+Setup(comps::Component...) = Setup(collect(comps))
 
 """
     propagation!(wave::ElectronBeam, setup::Setup)

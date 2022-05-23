@@ -3,7 +3,7 @@
 using FFTW
 
 struct Free <: Component
-    transferfunction::Array{<:Complex}
+    transferfunction::Matrix{<:Complex}
 end
 
 """
@@ -34,24 +34,17 @@ function Free(wave::ElectronBeam, distance::Real)::Free
     x = wave.x
     y = wave.y
     λ = wave.λ
-    k = 2 * π / λ
 
     # get some information out of the transverse coordinates
     dx = abs(x[1] - x[2])
     dy = abs(y[1] - y[2])
-    n = size(x, 1)
-    m = size(y, 1)
 
     # define the frequency coordinates
-    fx = Array(range(-1/(2*dx), 1/(2*dx), length=n))
-    fy = Array(range(-1/(2*dy), 1/(2*dy), length=m))
-
-    # create the empty transferfunction arrays
-    transferfunction = similar(wave.ψ)
-    irfunction = similar(wave.ψ)
+    fx = Vector{Float64}(range(-1/(2*dx), 1/(2*dx), length=size(x, 1)))
+    fy = Vector{Float64}(range(-1/(2*dy), 1/(2*dy), length=size(y, 1)))
 
     # fill the transferfunction arrays with the proper values
-    @. transferfunction = exp(-1im * π * λ * distance * (fx^2 + fy'^2))
+    transferfunction = @. exp(-1im * π * λ * distance * (fx^2 + fy'^2))
 
     # shift the transferfunction and return the Free object
     return Free(fftshift(transferfunction))
