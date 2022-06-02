@@ -13,8 +13,7 @@ julia> Lens(1)
 Lens(1)
 ```
 
-See also: [`PropTf`](@ref), [`PhaseImprint`](@ref), [`Aperture`](@ref),
-[`PropDirect`](@ref), [`Edge`](@ref)
+See also: [`Free`](@ref), [`PhaseImprint`](@ref), [`Aperture`](@ref)
 """
 struct Lens <: Component
     f::Real   # focal length of the lense

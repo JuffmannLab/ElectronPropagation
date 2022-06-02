@@ -14,8 +14,7 @@ julia> Aperture(1)
 Aperture(1)
 ```
 
-See also: [`PropTf`](@ref), [`PhaseImprint`](@ref), [`Lense`](@ref),
-[`PropDirect`](@ref), [`Edge`](@ref)
+See also: [`Free`](@ref), [`PhaseImprint`](@ref), [`Lens`](@ref)
 """
 struct Aperture <: Component
     d::Real

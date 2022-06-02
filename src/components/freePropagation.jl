@@ -7,15 +7,15 @@ struct Free <: Component
 end
 
 """
-    Free(wave::Wave, distance::Real)::PropTf
+    Free(wave::Wave, distance::Real)::Free
 
 Return the Free type.
 
 Create and return the PropTf struct that is needed to calculate the
 wavefunction a given distance `distance` away. It also needs the
 `wave`, which is an ElectronBeam type. Be aware that
-for this function to calculate something meaningfull, critical sampling
-must be mainitained!
+for this function to calculate something meaningfull, sampling
+must be fulfilled!
 
 # Example
 ```jldoctest
@@ -26,7 +26,7 @@ Free(Complex{Float64}[1.0 - 1.926465401546721e-9im 1.0 - 1.926465401546721e-9im;
 1.0 - 1.926465401546721e-9im 1.0 - 1.926465401546721e-9im])
 ```
 
-See also: [`Aperture`](@ref), [`PhaseImprint`](@ref), [`Lens`](@ref), [`Edge`](@ref)
+See also: [`Aperture`](@ref), [`PhaseImprint`](@ref), [`Lens`](@ref)
 """
 function Free(wave::ElectronBeam, distance::Real)::Free
 
@@ -36,12 +36,12 @@ function Free(wave::ElectronBeam, distance::Real)::Free
     λ = wave.λ
 
     # get some information out of the transverse coordinates
-    dx = abs(x[1] - x[2])
-    dy = abs(y[1] - y[2])
+    Δx = abs(x[1] - x[2])
+    Δy = abs(y[1] - y[2])
 
     # define the frequency coordinates
-    fx = Vector{Float64}(range(-1/(2*dx), 1/(2*dx), length=size(x, 1)))
-    fy = Vector{Float64}(range(-1/(2*dy), 1/(2*dy), length=size(y, 1)))
+    fx = Vector{Float64}(range(-1/(2*Δx), 1/(2*Δx), length=size(x, 1)))
+    fy = Vector{Float64}(range(-1/(2*Δy), 1/(2*Δy), length=size(y, 1)))
 
     # fill the transferfunction arrays with the proper values
     transferfunction = @. exp(-1im * π * λ * distance * (fx^2 + fy'^2))
@@ -70,5 +70,3 @@ function calculate!(wave::ElectronBeam, free::Free)
     # calculate the inverse fouriertransform
     wave.ψ = ifftshift(ifft(Ψ))
 end
-
-

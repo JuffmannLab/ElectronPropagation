@@ -3,7 +3,7 @@
 
 Return the ElectronBeam type.
 
-In the ElectronBeam type the wave function `ψ`, the de Broglie wavelength `λ`, 
+In the ElectronBeam type the wave function `ψ`, the de Broglie wavelength `λ`,
 the electron velocity `v` as well as the coordinates `x` and `y` are saved.
 
 # Example
@@ -18,7 +18,7 @@ ElectronBeam(ComplexF64[1.0 + 0.0im 1.0 + 0.0im; 1.0 + 0.0im 1.0 + 0.0im], 1.0e-
 
 ```
 
-See also: [`deBroglieWavelength`, `LaserBeam`](@ref)
+See also: [`deBroglieWavelength`] [`LaserBeam`](@ref)
 """
 mutable struct ElectronBeam
     ψ::Matrix{<:Complex}

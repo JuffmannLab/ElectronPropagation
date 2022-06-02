@@ -18,7 +18,7 @@ julia> PhaseImprint(lb)
 PhaseImprint(LaserBeam([0 0; 0 0], [1, 2], [1, 2], [1, 2], 1.8199532051293268e15, 4.0e-5, 2.8e-13))
 ```
 
-See also: [`Free`](@ref), [`Aperture`](@ref), [`Lense`](@ref), [`ElectronBeam`](@ref)
+See also: [`Free`](@ref), [`Aperture`](@ref), [`Lens`](@ref), [`ElectronBeam`](@ref)
 """
 struct PhaseImprint <: Component
     lb::LaserBeam

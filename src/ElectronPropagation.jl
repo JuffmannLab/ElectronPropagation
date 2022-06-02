@@ -2,11 +2,11 @@
 module ElectronPropagation
 
 # export the different kind of waves
-export ElectronBeam, LaserBeam, loadintensity, deBroglieWavelength
+export ElectronBeam, LaserBeam, deBroglieWavelength
 
 # export the different kinds of setup possibilities
-export Free, PhaseImprint, Aperture, Lens, PropDirect
-export Edge, Setup, propagation!
+export Free, PhaseImprint, Aperture, Lens
+export Setup, propagation!
 
 # define some physical constants
 global const c = 299792458           # the speed of light
