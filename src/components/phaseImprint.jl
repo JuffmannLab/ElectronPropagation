@@ -67,9 +67,9 @@ function interpolation(A::Matrix{<:Real}, coords_x::Vector{<:Real},
                        coords_y::Vector{<:Real}, x::Real, y::Real)::Real
 
     # if the value is not in the area of coords return 0
-    if x < coords_x[1] || x > coords_x[end]
+    if x <= coords_x[1] || x >= coords_x[end]
         return zero(eltype(A))
-    elseif y < coords_y[1] || y > coords_y[end]
+    elseif y <= coords_y[1] || y >= coords_y[end]
         return zero(eltype(A))
     end
 
